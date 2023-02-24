@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="ViaAds_Integration::datasync" title="ViaAds" module="ViaAds_Integration" sortOrder="51" resource="ViaAds_Integration::datasync"/>
+        <add id="ViaAds_Integration::synchronization" title="Data Synchronization" module="ViaAds_Integration" sortOrder="10" action="viaads_integration/datasync" resource="ViaAds_Integration::synchronization" parent="ViaAds_Integration::datasync"/>
+    </menu>
+</config>

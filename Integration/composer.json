@@ -1,0 +1,23 @@
+{
+    "name": "viaads/module-datasync",
+    "description": "",
+    "type": "magento2-module",
+    "version": "1.0.1",
+    "license": "ViaAds License",
+    "authors": [
+        {
+            "name": "ViaAds",
+            "email": "mf@marlin-os.com",
+            "homepage": "https://www.viaads.dk/",
+            "role": "Leader"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "ViaAds\\Integration\\": ""
+        }
+    }
+}
