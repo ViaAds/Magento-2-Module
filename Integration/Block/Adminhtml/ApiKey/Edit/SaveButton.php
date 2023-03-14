@@ -26,7 +26,6 @@ class SaveButton extends GenericButton implements ButtonProviderInterface
                                     'actionName' => 'save',
                                     'params' => [
                                         true,
-                                        ['api_key' => $this->debug()],
                                     ]
                                 ]
                             ]
@@ -34,9 +33,5 @@ class SaveButton extends GenericButton implements ButtonProviderInterface
                     ],
                 ]
         ];
-    }
-
-    public function debug() {
-        echo '<script type="text/javascript">console.log("Works");</script>';
     }
 }

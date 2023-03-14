@@ -178,11 +178,11 @@ class SyncWebshop
             // Catalog Visibility
             $product_object->catalogVisibility = $product->isVisibleInCatalog();
             // Related Product Ids
-            $product_object->RelatedProductIds = $product->getRelatedProductIds();
+            $product_object->RelatedProductIds = array_map('strval', $product->getRelatedProductIds());
             // Up Sell Product Ids
-            $product_object->UpSellProductIds = $product->getUpSellProductIds();
+            $product_object->UpSellProductIds = array_map('strval', $product->getUpSellProductIds());
             // Cross Sell Product Ids
-            $product_object->CrossSellProductIds = $product->getCrossSellProductIds();
+            $product_object->CrossSellProductIds = array_map('strval', $product->getCrossSellProductIds());
             // Slug
             $product_object->slug = $product->getUrlKey();
 

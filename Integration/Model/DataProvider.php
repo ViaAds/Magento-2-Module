@@ -38,7 +38,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     }
 
     /**
-     * Get data
+     * Get API Key
      *
      * @return array
      */
@@ -48,14 +48,8 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         $collection = $config->getCollection();
         $apiKeys = [];
 
-        if (count($collection) > 0)
-            echo '<script type="text/javascript">console.log("Hello1!");</script>';
-        echo '<script type="text/javascript">console.log("Hello2!");</script>';
-
         foreach ($collection as $item) {
             array_push($apiKeys, $item);
-            echo '<script type="text/javascript">console.log("' . $item['api_key'] . '");</script>';
-            //print_r($item->debug());
         }
 
         return $apiKeys;
