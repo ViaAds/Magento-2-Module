@@ -15,7 +15,6 @@ class SyncOrders
     private $objectManager;
     protected $transactions;
     protected $configFactory;
-    protected $directoryList;
     protected $url;
 
     public
@@ -32,7 +31,6 @@ class SyncOrders
         \Magento\Framework\ObjectManagerInterface                       $objectmanager,
         \Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory $transactions,
         \ViaAds\Integration\Model\ConfigFactory                         $configFactory,
-        \Magento\Framework\App\Filesystem\DirectoryList                 $directoryList,
         \Magento\Framework\UrlInterface                                 $url
     )
     {
@@ -48,7 +46,6 @@ class SyncOrders
         $this->objectManager = $objectmanager;
         $this->transactions = $transactions;
         $this->configFactory = $configFactory;
-        $this->directoryList = $directoryList;
         $this->url = $url;
     }
 
@@ -63,22 +60,36 @@ class SyncOrders
     {
         $this->logger->info('ViaAds Orders start sync');
         try {
-            require_once($this->directoryList->getPath('base') . '/app/code/ViaAds/Integration/Observer/http.php');
-
             //Orders
             $orders = $this->getOrders();
             $this->logger->info('ViaAds Orders found ' . count($orders));
             if (count($orders) > 0) {
                 $this->logger->info('ViaAds Orders: ' . json_encode($orders));
-                PostToUrl("https://integration.viaads.dk/magento/order", $orders);
+                $this->PostToUrl("https://sync.viaads.dk/magento/order", $orders);
             }
         } catch (Exception $e) {
             $error_object = new\ stdClass();
             $error_object->Error = $e->getMessage();
             $error_object->Url = $this->url->getBaseUrl();
-            PostToUrlEvent("https://integration.viaads.dk/error", $error_object);
+            $this->PostToUrl("https://integration.viaads.dk/error", $error_object);
         }
         $this->logger->info('ViaAds Orders sync end');
+    }
+
+    function PostToUrl( $url, $data, $json = true ) {
+        if ( $json == true ) {
+            $data = json_encode( $data );
+        }
+        $ch = curl_init( $url );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'content-type: application/json' ) );
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1 );
+        curl_setopt( $ch, CURLOPT_HEADER, 0 );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 0 );
+
+        $response = curl_exec( $ch );
+        return $response;
     }
 
 
@@ -87,13 +98,11 @@ class SyncOrders
      *
      * @return Orders
      */
-    public
-
-    function getOrders()
+    public function getOrders()
     {
         $time = time();
         $to = date('Y-m-d H:i:s', $time);
-        $lastTime = $time - (86400); // 1Day = 86400
+        $lastTime = $time - (864000); // 1Day = 86400
         $from = date('Y-m-d H:i:s', $lastTime);
         $orderCollection = $this->orderCollectionFactory->create()->addAttributeToSelect('*')->addAttributeToFilter('updated_at', array('from' => $from, 'to' => $to));
         $orders = [];
@@ -197,9 +206,7 @@ class SyncOrders
      * @param Order $order
      * @return bool
      */
-    public
-
-    function getBillingAddress($order)
+    public function getBillingAddress($order)
     {
         // Order Customer Billing Address
         $order_billing_address = new\ stdClass();
@@ -222,9 +229,7 @@ class SyncOrders
      * @param Order $order
      * @return bool
      */
-    public
-
-    function getShippingAddress($order)
+    public function getShippingAddress($order)
     {
         // Order Customer Shipping Address
         $order_shipping_address = new\ stdClass();

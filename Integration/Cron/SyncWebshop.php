@@ -61,7 +61,6 @@ class SyncWebshop
         $this->logger->info('ViaAds Product sync start');
         try {
             //Post function
-            require_once($this->directoryList->getPath('base') . '/app/code/ViaAds/Integration/Observer/http.php');
 
             $config = $this->configFactory->create();
             foreach ($config->getCollection() as $item) {
@@ -83,16 +82,32 @@ class SyncWebshop
             $splitted = array_chunk($webshop->Products, 2500);
             foreach ($splitted as $interval) {
                 $webshop->Products = $interval;
-                PostToUrl("https://integration.viaads.dk/magento/webshop", $webshop);
+                $this->PostToUrl("https://sync.viaads.dk/magento/webshop", $webshop);
                 $webshop->Categories = [];
             }
         } catch (Exception $e) {
             $error_object = new\ stdClass();
             $error_object->Error = $e->getMessage();
             $error_object->Url = $this->url->getBaseUrl();
-            PostToUrlEvent("https://integration.viaads.dk/error", $error_object);
+            $this->PostToUrl("https://integration.viaads.dk/error", $error_object);
         }
         $this->logger->info('ViaAds Product sync end');
+    }
+
+    function PostToUrl( $url, $data, $json = true ) {
+        if ( $json == true ) {
+            $data = json_encode( $data );
+        }
+        $ch = curl_init( $url );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'content-type: application/json' ) );
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1 );
+        curl_setopt( $ch, CURLOPT_HEADER, 0 );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 0 );
+
+        $response = curl_exec( $ch );
+        return $response;
     }
 
     /**
@@ -100,9 +115,7 @@ class SyncWebshop
      *
      * @return Products
      */
-    public
-
-    function getProducts()
+    public function getProducts()
     {
         $productCollection = $this->productCollectionFactory->create();
         $date = new\ DateTime();
@@ -310,9 +323,7 @@ class SyncWebshop
      * @param int $productId
      * @return bool
      */
-    public
-
-    function getStockStatus($productId)
+    public function getStockStatus($productId)
     {
         $stockItem = $this->stockItemRepository->get($productId);
         $qty = $stockItem->getQty();
@@ -327,9 +338,7 @@ class SyncWebshop
      * @param int $productId
      * @return int
      */
-    public
-
-    function getStockQuantity($productId)
+    public function getStockQuantity($productId)
     {
         $stockItem = $this->stockItemRepository->get($productId);
         $qty = $stockItem->getQty();
@@ -341,9 +350,7 @@ class SyncWebshop
      *
      * @return category
      */
-    public
-
-    function getCategories()
+    public function getCategories()
     {
         $collection = $this->categoryCollectionFactory->create();
         $collection->addAttributeToSelect('*');

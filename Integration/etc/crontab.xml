@@ -4,7 +4,7 @@
         <job name="viaads_webshop" instance="ViaAds\Integration\Cron\SyncWebshop" method="execute">
             <schedule>0 1 * * *</schedule>
             <!-- 0 1 * * * Every day at 1 Production-->
-            <!--<schedule>*/5 * * * *</schedule>-->
+            <!-- <schedule>*/5 * * * *</schedule> -->
             <!-- */15 * * * * Every 15 minut Dev-->
         </job>
     </group>
@@ -12,7 +12,7 @@
         <job name="viaads_orders" instance="ViaAds\Integration\Cron\SyncOrders" method="execute">
             <schedule>0 2 * * *</schedule>
             <!-- 0 4,6,8,14,16,18 * * * Production-->
-            <!--<schedule>*/5 * * * *</schedule>-->
+            <!-- <schedule>*/5 * * * *</schedule> -->
             <!-- */5 * * * * Dev-->
         </job>
     </group>

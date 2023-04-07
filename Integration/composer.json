@@ -1,13 +1,13 @@
 {
     "name": "viaads/module-datasync",
-    "description": "",
+    "description": "The ViaAds extension enables order and product synchro marketing solution for merchants within the ViaBill network.",
     "type": "magento2-module",
     "version": "1.0.1",
     "license": "ViaAds License",
     "authors": [
         {
             "name": "ViaAds",
-            "email": "mf@marlin-os.com",
+            "email": "mf@valyrion.com",
             "homepage": "https://www.viaads.dk/",
             "role": "Leader"
         }
@@ -19,5 +19,13 @@
         "psr-4": {
             "ViaAds\\Integration\\": ""
         }
+    },
+    "extra": {
+        "map": [
+            [
+                "docs/",
+                "Vendor/Module/docs/"
+            ]
+        ]
     }
 }
